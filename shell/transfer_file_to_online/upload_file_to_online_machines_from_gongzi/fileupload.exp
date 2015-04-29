@@ -1,0 +1,30 @@
+#!/usr/bin/expect -f
+set username [lindex $argv 0]
+set passwd1 [lindex $argv 1]
+set passwd2 [lindex $argv 2]
+set dirname [lindex $argv 3]
+
+set timeout 5
+
+spawn scp -r $dirname $username@跳板机ip:/tmp/$username/
+expect "*assword:"
+send -- "$passwd1\n"
+expect "100%"
+
+spawn ssh $username@跳板机ip
+expect "*assword:"
+send -- "$passwd1\n"
+expect "\]"
+
+send -- "scp -r -P 58422 /tmp/$username/$dirname $username@线上机器ip:/data/$username/\n"
+expect "(yes/no)?"
+send -- "yes\n"
+expect  "*assword:"
+send -- "$passwd2\n"
+expect  "\]"
+send -- "rm -rf /tmp/$username/$dirname\n"
+expect "\]"
+send -- "exit\n"
+expect "exit"
+send -- ""
+expect eof

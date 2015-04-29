@@ -1,0 +1,72 @@
+#!/usr/bin/expect -f
+
+if { $argc < 2 }  {
+puts stdout "Usage: $argv0 dirname server "
+exit 1
+}
+
+set dirname  [lindex $argv 0]
+set server  [lindex $argv 1]
+set username 你的用户名
+set passwd 你的密码
+
+set timeout 5
+
+proc go_online_create_temp_dir { ip is_ladder username passwd } {
+    if { $is_ladder == "true" } {
+        spawn ssh $username@$ip
+    } else {
+            send -- "ssh $username@$ip\n"
+            expect "(yes/no)?"
+            send -- "yes\n"
+    }
+    expect "*assword:"
+    send -- "$passwd\n"
+    expect "\]"
+    send -- "rm -rf /tmp/$username;mkdir /tmp/$username \n"
+    expect "\]"
+    send -- "exit\n"
+    expect "\]"
+}
+
+proc transfer_file { ip is_ladder username passwd dirname } {
+    if { $is_ladder == "true" } {
+        spawn scp -r $dirname $username@$ip:/tmp/$username/
+    } else {
+        send -- "scp -r -P 58422 /tmp/$username/* $username@$ip:/tmp/$username/\n"
+        expect "(yes/no)?"
+        send -- "yes\n"
+    }
+    expect  "*assword:"
+    send -- "$passwd\n"
+    expect  "\]"
+}
+
+proc process_on_server { ip is_ladder username passwd dirname } {
+    go_online_create_temp_dir $ip $is_ladder $username $passwd
+    transfer_file  $ip $is_ladder $username $passwd $dirname
+}
+
+#先去/跳板机/创建自己的临时目录并传文件到
+process_on_server "跳板机" "true" $username $passwd $dirname
+
+#登陆跳板机
+spawn ssh $username@跳板机
+expect "*assword:"
+send -- "$passwd\n"
+expect  "\]"
+
+#去server创建自己的临时目录并传文件到server
+process_on_server $server "false" $username $passwd $dirname
+
+#如果想留在server，保留下面
+#登陆server
+send -- "ssh $username@$server \n"
+expect "(yes/no)?"
+send -- "yes\n"
+expect "*assword:"
+send -- "$passwd\n"
+expect "\]"
+
+#停留在server上
+interact

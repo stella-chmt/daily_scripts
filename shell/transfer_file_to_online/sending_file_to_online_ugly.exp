@@ -1,0 +1,65 @@
+#!/usr/bin/expect -f
+
+if { $argc < 2 }  {
+puts stdout "Usage: $argv0 dirname server "
+exit 1
+}
+
+set dirname  [lindex $argv 0]
+set server  [lindex $argv 1]
+set username 你的用户名
+set passwd 你的密码
+
+set timeout 5
+
+#先去跳板机创建自己的临时目录
+spawn ssh $username@跳板机
+expect "*assword:"
+send -- "$passwd\n"
+expect "\]"
+send -- "rm -rf /tmp/$username;mkdir /tmp/$username \n"
+expect "\]"
+send -- "exit\n"
+
+#传文件到跳板机
+spawn scp -r $dirname $username@跳板机:/tmp/$username/
+expect "*assword:"
+send -- "$passwd\n"
+expect "100%"
+
+#登陆跳板机
+spawn ssh $username@跳板机
+expect "*assword:"
+send -- "$passwd\n"
+expect "\]"
+
+#先去server创建自己的临时目录
+send -- "ssh $username@$server\n"
+expect "(yes/no)?"
+send -- "yes\n"
+expect "*assword:"
+send -- "$passwd\n"
+expect "\]"
+send -- "rm -rf /tmp/$username;mkdir /tmp/$username \n"
+expect "\]"
+send -- "exit\n"
+expect "\]"
+
+#传文件到server
+send -- "scp -r -P 58422 /tmp/$username/* $username@$server:/tmp/$username/\n"
+expect "(yes/no)?"
+send -- "yes\n"
+expect  "*assword:"
+send -- "$passwd\n"
+expect  "\]"
+
+#登陆server
+send -- "ssh $username@$server \n"
+expect "(yes/no)?"
+send -- "yes\n"
+expect "*assword:"
+send -- "$passwd\n"
+expect "\]"
+
+#停留在server上
+interact

@@ -1,0 +1,30 @@
+#!/usr/bin/python
+#coding=utf-8
+
+import urllib, os, re
+
+
+print str(urllib.quote("蟹"))
+
+print urllib.unquote("%21")
+#%3A是: %3B是; %2f是/
+
+#suggestid%3Aca1a9d7d-3388-46cd-bee1-2b0f6e8b65c3%3Browindex%3A2%3Bsuggesttype%3A0%3Bdatatype%3A0%3Bsearchkeyword%3AE5B08FE9BB91%3Bmaintag%3A-1
+#suggestid:Aca1a9d7d-3388-46cd-bee1-2b0f6e8b65c3;rowindex:2;suggesttype:0;datatype:0;searchkeyword:小黑;maintag:-1
+'''
+def java_string_hashcode(s):
+    h = 0
+    for c in s:
+        h = (31 * h + ord(c)) & 0xFFFFFFFF
+    return ((h + 0x80000000) & 0xFFFFFFFF) - 0x80000000
+
+print java_string_hashcode("c") % 100
+'''
+
+#print re.sub(r"\${LionDataSource.*ConnectionStr}", 'jdbc:mysql://192.168.0.0/TEMP', '<ConnectionStr description="连接字符串" title="连接字符串">${LionDataSource.MySQLMainDB.ConnectionStr}</ConnectionStr>')
+
+
+
+
+
+
