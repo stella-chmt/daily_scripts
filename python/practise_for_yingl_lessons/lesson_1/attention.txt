@@ -1,0 +1,2 @@
+注意：brew install chromedriver
+然后将安装目录例如/usr/local/Cellar/chromedriver/2.28添加到环境变量PATH
