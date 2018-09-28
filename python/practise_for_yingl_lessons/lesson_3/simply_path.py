@@ -13,7 +13,7 @@ def simplyPath(path):
         for dir in dirs:
             if (dir == "..") and rtn:
                 rtn.pop()
-            elif (dir != ".") and dir:
+            elif (dir != "..") and (dir != ".") and dir:
                 rtn.append(dir)
     return "/" + ("/".join(rtn))
 '''
