@@ -15,6 +15,8 @@ def traverse(head):
         head = head.next
     return "->".join(vals)
 
+# 此种做法表尾删不掉，抛弃
+'''
 def deleteNodeA(head, val):
     if not head:
         return None
@@ -22,12 +24,17 @@ def deleteNodeA(head, val):
         node = head
         while node:
             if node.val == val:
-                nnext = node.next
-                node.val = nnext.val
-                node.next = nnext.next
+                if node.next is None:
+                    node = None
+                    break
+                else:
+                    p = node.next
+                    node.val = p.val
+                    node.next = p.next
             else:
                 node = node.next
     return head
+'''
 
 #最普遍的做法
 def deleteNodeB(head, val):
@@ -53,11 +60,13 @@ n3 = Node(30)
 n4 = Node(40)
 n5 = Node(30)
 n6 = Node(60)
+n7 = Node(30)
 n1.next = n2
 n2.next = n3
 n3.next = n4
 n4.next = n5
 n5.next = n6
+n6.next = n7
 head = n1
 print(traverse(head))
 #print(traverse(deleteNodeA(head, 30)))
