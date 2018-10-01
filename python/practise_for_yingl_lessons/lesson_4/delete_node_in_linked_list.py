@@ -16,6 +16,7 @@ def traverse(head):
     return "->".join(vals)
 
 # 此种做法表尾删不掉，抛弃
+'''
 def deleteNodeA(head, val):
     if not head:
         return None
@@ -33,6 +34,7 @@ def deleteNodeA(head, val):
             else:
                 node = node.next
     return head
+'''
 
 #最普遍的做法
 def deleteNodeB(head, val):
