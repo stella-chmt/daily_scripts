@@ -15,8 +15,9 @@ def traverse(head):
         head = head.next
     return "->".join(vals)
 
+# 此种做法表尾删不掉
 def deleteNodeO1(node):
-    if node.next == None:
+    if node.next is None:
         node = None
     else:
         e = node.next
@@ -33,4 +34,8 @@ n3.next = n4
 head = n1
 print(traverse(head))
 deleteNodeO1(n3)
+print(traverse(head))
+deleteNodeO1(n4)
+print(traverse(head))
+deleteNodeO1(n1)
 print(traverse(head))
